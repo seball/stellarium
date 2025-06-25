@@ -1,0 +1,110 @@
+<div class="horoscope-wrapper">
+
+  <header class="horoscope-header">
+    <img src="logo.webp" alt="Stellarium" class="main-logo">
+    <p class="subtitle">Twoje codzienne przepowiednie</p>
+  </header>
+
+  <main class="horoscope-content">
+    <!-- Wybór znaku zodiaku -->
+    <div *ngIf="!hasSelectedSignBefore">
+      <app-zodiac-selector
+        (signSelected)="onSignSelected($event)"
+      ></app-zodiac-selector>
+    </div>
+
+    <!-- Wybór wróżbity -->
+    <div *ngIf="showFortuneTellerSelector">
+      <app-fortune-teller-selector
+        (fortuneTellerSelected)="onFortuneTellerSelected($event)"
+        [selectedFortuneTeller]="selectedFortuneTeller"
+      >
+      </app-fortune-teller-selector>
+    </div>
+
+    <!-- Generowanie horoskopu dla użytkowników którzy już wybrali -->
+    <div
+      *ngIf="hasSelectedSignBefore && hasSelectedFortuneTellerBefore && !horoscopeText && !hasReachedLimit && !showFortuneTellerSelector"
+    >
+      <div class="daily-horoscope-section">
+        <h3>Twój znak: {{ selectedSign }}</h3>
+        <div *ngIf="selectedFortuneTeller" class="selected-fortune-teller">
+          <p>
+            Wróżbita:
+            <span [style.color]="selectedFortuneTeller.color"
+              >{{ selectedFortuneTeller.avatar }} {{ selectedFortuneTeller.name
+              }}</span
+            >
+          </p>
+        </div>
+        <button
+          class="generate-button"
+          (click)="generateHoroscope()"
+          [disabled]="isLoading"
+        >
+          Wygeneruj horoskop na dziś
+        </button>
+      </div>
+    </div>
+
+    <div
+      *ngIf="selectedSign && (horoscopeText || isLoading)"
+      class="horoscope-display"
+    >
+      <div class="selected-sign-header">
+        <h2>{{ selectedSign }}</h2>
+        <div *ngIf="selectedFortuneTeller" class="fortune-teller-info">
+          <span
+            class="fortune-teller-badge"
+            [style.background-color]="selectedFortuneTeller.color"
+          >
+            {{ selectedFortuneTeller.avatar }} {{ selectedFortuneTeller.name }}
+          </span>
+        </div>
+      </div>
+
+      <div class="horoscope-card">
+        <div *ngIf="isLoading" class="loading">
+          <div class="loader loader-9">
+            <svg class="loader-star star1" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="23.172px" height="23.346px" viewBox="0 0 23.172 23.346" xml:space="preserve">
+              <polygon fill="#edf67d" points="11.586,0 8.864,8.9 0,8.9 7.193,14.447 4.471,23.346 11.586,17.84 18.739,23.346 16.77,14.985 23.172,8.9 14.306,8.9" />
+            </svg>
+            <svg class="loader-star star2" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="23.172px" height="23.346px" viewBox="0 0 23.172 23.346" xml:space="preserve">
+              <polygon fill="#edf67d" points="11.586,0 8.864,8.9 0,8.9 7.193,14.447 4.471,23.346 11.586,17.84 18.739,23.346 16.77,14.985 23.172,8.9 14.306,8.9" />
+            </svg>
+            <svg class="loader-star star3" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="23.172px" height="23.346px" viewBox="0 0 23.172 23.346" xml:space="preserve">
+              <polygon fill="#edf67d" points="11.586,0 8.864,8.9 0,8.9 7.193,14.447 4.471,23.346 11.586,17.84 18.739,23.346 16.77,14.985 23.172,8.9 14.306,8.9" />
+            </svg>
+          </div>
+          <p>Konsultuję się z gwiazdami...</p>
+        </div>
+
+        <div
+          *ngIf="!isLoading && horoscopeHtml"
+          class="horoscope-text"
+          [innerHTML]="horoscopeHtml"
+        ></div>
+
+        <div *ngIf="hasReachedLimit" class="limit-message">
+          <p>
+            Otrzymałeś już swój horoskop na dziś. Wróć jutro po nowe
+            przepowiednie!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+  </main>
+
+  <footer class="horoscope-footer">
+    <p>Jeden horoskop dziennie</p>
+    <button
+      *ngIf="hasSelectedSignBefore"
+      class="clear-data-button"
+      (click)="clearUserData()"
+    >
+      Wyczyść dane (reset)
+    </button>
+  </footer>
+</div>

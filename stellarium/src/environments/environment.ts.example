@@ -1,0 +1,4 @@
+export const environment = {
+  production: false,
+  githubToken: 'YOUR_GITHUB_PAT_HERE', // Add your GitHub PAT here - see GITHUB_TOKEN_SETUP.md
+};

@@ -1,0 +1,404 @@
+.horoscope-wrapper {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+// New styles for Polish interface
+.first-time-message {
+  text-align: center;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  border: 2px solid var(--color-lavender);
+  
+  h3 {
+    color: var(--color-yellow);
+    margin-bottom: 0.3rem;
+    font-size: 1.3rem;
+    font-family: var(--font-primary);
+  }
+  
+  p {
+    color: var(--color-lavender);
+    font-size: 1rem;
+  }
+}
+
+.daily-horoscope-section {
+  text-align: center;
+  padding: 1.5rem;
+  
+  h3 {
+    color: #fff;
+    margin-bottom: 1rem;
+    font-size: 1.6rem;
+  }
+}
+
+.generate-button {
+  background: linear-gradient(135deg, var(--color-accent-pink) 0%, var(--color-accent-purple) 100%);
+  color: var(--color-white);
+  border: none;
+  padding: 12px 25px;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-primary);
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(244, 150, 216, 0.3);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.clear-data-button {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-lavender);
+  border: 1px solid var(--color-lavender);
+  padding: 8px 16px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+  font-family: var(--font-primary);
+  
+  &:hover {
+    background: var(--color-lavender);
+    color: var(--color-primary);
+  }
+}
+
+.selected-fortune-teller {
+  text-align: center;
+  margin-bottom: 1rem;
+  
+  p {
+    color: var(--color-lavender);
+    font-size: 1rem;
+    font-family: var(--font-primary);
+    
+    span {
+      font-weight: 600;
+    }
+  }
+}
+
+.fortune-teller-info {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.fortune-teller-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  color: var(--color-primary);
+  background: var(--color-yellow);
+  font-size: 0.9rem;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  font-family: var(--font-primary);
+}
+
+// Styles for markdown content
+.horoscope-text {
+  color: #fff;
+  line-height: 1.6;
+  
+  h1, h2, h3, h4, h5, h6 {
+    color: #fff;
+    margin: 1rem 0 0.5rem 0;
+    font-weight: 600;
+  }
+  
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.3rem; }
+  h3 { font-size: 1.1rem; }
+  
+  p {
+    margin: 0.8rem 0;
+    color: #e0e0e0;
+  }
+  
+  strong {
+    color: #fff;
+    font-weight: 600;
+  }
+  
+  em {
+    color: #ccc;
+    font-style: italic;
+  }
+  
+  ul, ol {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+    
+    li {
+      margin: 0.3rem 0;
+      color: #e0e0e0;
+    }
+  }
+}
+
+
+// Header styles
+.horoscope-header {
+  text-align: center;
+  padding: 1.5rem 1rem 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.main-logo {
+  height: 240px;
+  width: auto;
+  margin-bottom: 0.3rem;
+  filter: drop-shadow(0 0 20px rgba(237, 246, 125, 0.5));
+  animation: stellarGlow 4s ease-in-out infinite;
+}
+
+@keyframes stellarGlow {
+  0%, 100% { 
+    text-shadow: 
+      0 0 20px rgba(237, 246, 125, 0.4),
+      0 0 40px rgba(237, 246, 125, 0.3),
+      0 0 60px rgba(237, 246, 125, 0.2);
+  }
+  50% { 
+    text-shadow: 
+      0 0 30px rgba(237, 246, 125, 0.8),
+      0 0 60px rgba(237, 246, 125, 0.6),
+      0 0 90px rgba(237, 246, 125, 0.4),
+      0 0 120px rgba(202, 125, 249, 0.3);
+  }
+}
+
+@keyframes textShimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: var(--color-lavender);
+  opacity: 0.9;
+  letter-spacing: 2px;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-primary);
+}
+
+
+// Content styles
+.horoscope-content {
+  flex: 1;
+  padding: 1rem 2rem;
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.horoscope-display {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.selected-sign-header {
+  text-align: center;
+  margin-bottom: 1rem;
+  
+  h2 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 20px rgba(237, 246, 125, 0.3);
+    color: var(--color-yellow);
+    font-family: var(--font-primary);
+  }
+}
+
+.back-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--color-pink-light);
+  color: var(--color-pink-light);
+  padding: 0.75rem 1.5rem;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  font-family: var(--font-primary);
+  
+  &:hover {
+    background: var(--color-pink-light);
+    color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 176, 222, 0.3);
+  }
+}
+
+.horoscope-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 2px solid var(--color-lavender);
+  border-radius: 30px;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 20px 40px rgba(228, 188, 252, 0.2);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(237, 246, 125, 0.1) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+  }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.horoscope-text {
+  position: relative;
+  z-index: 1;
+  
+  p {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    letter-spacing: 0.5px;
+    text-align: center;
+    font-family: var(--font-primary);
+  }
+}
+
+// Loading styles
+.loading {
+  text-align: center;
+  padding: 1.5rem;
+  
+  p {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    opacity: 0.8;
+  }
+}
+
+// Star Loader Styles
+.loader {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 15px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.loader-star {
+  position: absolute;
+  top: calc(50% - 12px);
+}
+
+// LOADER-9 Star Pulse Animation
+.loader-9 .star1 {
+  animation: stars-pulse 1s ease-in-out infinite;
+  left: 0;
+}
+
+.loader-9 .star2 {
+  animation: stars-pulse 1s 0.2s ease-in-out infinite;
+  left: 25px;
+}
+
+.loader-9 .star3 {
+  animation: stars-pulse 1s 0.4s ease-in-out infinite;
+  left: 50px;
+}
+
+@keyframes stars-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+// Message styles
+.error-message, .limit-message {
+  text-align: center;
+  padding: 1rem;
+  margin: 1rem auto;
+  max-width: 600px;
+  background: rgba(244, 150, 216, 0.1);
+  border: 2px solid var(--color-accent-pink);
+  border-radius: 15px;
+  
+  p {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+}
+
+.limit-message {
+  background: rgba(202, 125, 249, 0.1);
+  border-color: var(--color-light-purple);
+}
+
+// Footer styles
+.horoscope-footer {
+  text-align: center;
+  padding: 1rem;
+  opacity: 0.6;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .main-logo {
+    height: 180px;
+  }
+  
+  .horoscope-card {
+    padding: 2rem 1.5rem;
+  }
+  
+  .selected-sign-header h2 {
+    font-size: 2.5rem;
+  }
+}

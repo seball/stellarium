@@ -1,0 +1,18 @@
+<div class="zodiac-container">
+
+  <h2 class="zodiac-title">Wybierz swój znak zodiaku</h2>
+  <div class="zodiac-grid">
+    <div 
+      *ngFor="let sign of zodiacSigns" 
+      class="zodiac-region-button"
+      [class.selected]="selectedSign === sign.name"
+      [style.border-color]="sign.backgroundColor"
+      [style.background-color]="sign.backgroundColor"
+      [style.background-image]="'url(/zodiac.svg)'"
+      [style.background-position]="getSpritePosition(sign.spritePosition)"
+      [title]="sign.name + ' (' + sign.dateRange + ')'"
+      (click)="selectSign(sign.name)"
+    >
+    </div>
+  </div>
+</div>

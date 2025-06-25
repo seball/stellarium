@@ -1,0 +1,14 @@
+<div class="app-container">
+  <!-- tsParticles background -->
+  <ngx-particles
+    [id]="id"
+    [options]="particlesOptions"
+    (particlesLoaded)="particlesLoaded($event)"
+    class="particles-background">
+  </ngx-particles>
+
+  <div class="app-content">
+    <app-horoscope></app-horoscope>
+    <router-outlet />
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="fortune-teller-selector">
+  <h3 class="selector-title">Wybierz swojego wróżbitę</h3>
+  <p class="selector-subtitle">Każdy ma swój unikalny styl przepowiadania przyszłości</p>
+  
+  <div class="fortune-tellers-grid">
+    <div 
+      *ngFor="let fortuneTeller of fortuneTellers" 
+      class="fortune-teller-card"
+      [class.selected]="selectedFortuneTeller?.id === fortuneTeller.id"
+      (click)="selectFortuneTeller(fortuneTeller)"
+    >
+      <div class="card-inner">
+        <div class="card-front">
+          <img [src]="'/fortune-tellers/' + fortuneTeller.id + '.webp'" 
+               [alt]="fortuneTeller.name"
+               class="fortune-teller-image">
+          <div class="card-title">
+            <h4 class="name" [style.color]="fortuneTeller.color">
+              {{ fortuneTeller.name }}
+            </h4>
+            <p class="specialty">{{ fortuneTeller.specialty }}</p>
+          </div>
+        </div>
+        
+        <div class="card-back">
+          <h4 class="name">{{ fortuneTeller.name }}</h4>
+          <p class="description">{{ fortuneTeller.description }}</p>
+          <p class="personality">{{ fortuneTeller.personality }}</p>
+        </div>
+      </div>
+      
+      <div class="selection-indicator" [style.background-color]="fortuneTeller.color">
+        <span *ngIf="selectedFortuneTeller?.id === fortuneTeller.id">✓</span>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="selectedFortuneTeller" class="selected-info">
+    <p>Wybrałeś: <strong [style.color]="selectedFortuneTeller.color">{{ selectedFortuneTeller.name }}</strong></p>
+  </div>
+</div>
