@@ -1,7 +1,7 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/stellarium",
+  "outputDirectory": "dist/stellarium/browser",
   "devCommand": "npm run start",
   "installCommand": "npm install --legacy-peer-deps",
   "framework": "angular",
