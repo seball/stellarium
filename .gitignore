@@ -41,8 +41,8 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Environment files with secrets
-/src/environments/environment.ts
+# Environment files with secrets (keep environment.ts for build compatibility)
+# /src/environments/environment.ts
 
 # Environment variables
 .env
