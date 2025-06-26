@@ -1,6 +1,6 @@
 <div class="horoscope-wrapper">
 
-  <header class="horoscope-header">
+  <header class="horoscope-header" *ngIf="!hasSelectedSignBefore">
     <img src="logo.webp" alt="Stellarium" class="main-logo">
     <p class="subtitle">Twoje codzienne przepowiednie</p>
   </header>
@@ -108,3 +108,10 @@
     </button>
   </footer>
 </div>
+
+<!-- Star Transition Animation -->
+<app-star-transition
+  [zodiacSign]="selectedSign || ''"
+  [isActive]="showStarTransition"
+  (animationComplete)="onStarAnimationComplete()"
+></app-star-transition>

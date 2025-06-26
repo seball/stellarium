@@ -14,27 +14,24 @@
 
 .zodiac-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr); /* 6 kolumn jak w SVG */
-  grid-template-rows: repeat(2, 1fr);    /* 2 rzędy jak w SVG */
+  grid-template-columns: repeat(12, 1fr);
   gap: 0.5rem;
-  max-width: 800px;
-  height: 520px; /* 2 x 250px + gap */
+  max-width: 1200px;
   margin: 0 auto;
 }
 
 .zodiac-region-button {
-  width: 125px;
-  height: 250px;
-  background-size: 600% 200%; 
+  width: 80px;
+  height: 160px;
+  background-size: 600% 200%;
   background-repeat: no-repeat;
-  border: 3px solid var(--color-lavender);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  
+
   &:hover {
     transform: scale(0.95);
     border-width: 4px;
@@ -43,7 +40,7 @@
     filter: brightness(1.1) contrast(1.2);
     backdrop-filter: blur(12px);
   }
-  
+
   &.selected {
     transform: scale(1.08);
     border-width: 5px;
@@ -55,31 +52,142 @@
   }
 }
 
-
 // Responsywność dla urządzeń mobilnych
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .zodiac-grid {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     max-width: 600px;
-    height: 410px; /* Proporcjonalnie mniejszy */
-    gap: 0.3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .zodiac-container {
+    padding: 1rem;
+  }
+
+  .zodiac-grid {
+    display: none; // Hide desktop grid
   }
   
-  .zodiac-region-button {
-    width: 95px;  /* Mniejszy o 24% */
-    height: 190px; /* Zachowa proporcje */
+  .mobile-carousel-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+    height: 360px;
+    margin: 0 auto;
+    overflow: visible;
+  }
+  
+  .zodiac-carousel {
+    width: 100%;
+    height: 300px;
+    padding: 20px 0 60px 0;
+  }
+  
+  .zodiac-slide {
+    height: 260px;
+    width: 130px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-size: 600% 200%;
+    background-repeat: no-repeat;
+    border: none;
+    opacity: 0.6;
+    transform: scale(0.85);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    
+    span {
+      display: none;
+    }
+    
+    &:hover {
+      opacity: 0.8;
+      transform: scale(0.9);
+    }
+    
+    &.selected {
+      box-shadow: 0 0 30px var(--color-yellow);
+      opacity: 1;
+      transform: scale(0.95);
+      border: 3px solid var(--color-yellow);
+    }
+  }
+  
+  // Owl Carousel center slide styling
+  ::ng-deep .owl-item.center .zodiac-slide {
+    opacity: 1;
+    transform: scale(1.15);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  }
+  
+  // Ensure all three slides are visible
+  ::ng-deep .owl-item {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  // Make sure owl carousel items are visible
+  ::ng-deep .owl-stage {
+    display: flex;
+    align-items: center;
+  }
+  
+  ::ng-deep .owl-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  // Custom navigation styling
+  ::ng-deep .owl-nav {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    
+    .owl-prev, .owl-next {
+      position: relative;
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: white;
+      width: 50px;
+      height: 40px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: scale(1.05);
+      }
+    }
   }
 }
 
 @media (max-width: 480px) {
-  .zodiac-grid {
-    max-width: 400px;
-    height: 270px;
-    gap: 0.2rem;
+  .zodiac-title {
+    font-size: 2rem;
+    margin-bottom: 3rem;
   }
   
-  .zodiac-region-button {
-    width: 62px;
-    height: 125px;
-    border-radius: 6px;
+  .mobile-carousel-wrap {
+    max-width: 380px;
+    height: 320px;
+  }
+  
+  .zodiac-slide {
+    width: 110px;
+    height: 220px;
   }
 }

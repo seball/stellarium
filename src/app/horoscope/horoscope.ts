@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ZodiacSelector } from '../zodiac-selector/zodiac-selector';
 import { FortuneTellerSelectorComponent } from '../fortune-teller-selector/fortune-teller-selector.component';
+import { StarTransitionComponent } from '../star-transition/star-transition.component';
 import { OpenAIService } from '../services/openai.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { marked } from 'marked';
@@ -17,7 +18,7 @@ interface HoroscopeData {
 
 @Component({
   selector: 'app-horoscope',
-  imports: [CommonModule, ZodiacSelector, FortuneTellerSelectorComponent],
+  imports: [CommonModule, ZodiacSelector, FortuneTellerSelectorComponent, StarTransitionComponent],
   templateUrl: './horoscope.html',
   styleUrl: './horoscope.scss',
 })
@@ -32,6 +33,7 @@ export class HoroscopeComponent implements OnInit {
   hasSelectedSignBefore: boolean = false;
   hasSelectedFortuneTellerBefore: boolean = false;
   showFortuneTellerSelector: boolean = false;
+  showStarTransition: boolean = false;
   todayDate: string = new Date().toLocaleDateString('pl-PL', {
     weekday: 'long',
     year: 'numeric',
@@ -91,6 +93,13 @@ export class HoroscopeComponent implements OnInit {
       localStorage.setItem('user_zodiac_sign', sign);
       this.hasSelectedSignBefore = true;
     }
+    
+    // Pokaż animację gwiazd
+    this.showStarTransition = true;
+  }
+
+  onStarAnimationComplete(): void {
+    this.showStarTransition = false;
     
     // Pokaż wybór wróżbity jeśli nie wybrano wcześniej
     if (!this.hasSelectedFortuneTellerBefore) {
@@ -190,5 +199,6 @@ export class HoroscopeComponent implements OnInit {
     this.horoscopeHtml = '';
     this.errorMessage = '';
     this.showFortuneTellerSelector = false;
+    this.showStarTransition = false;
   }
 }

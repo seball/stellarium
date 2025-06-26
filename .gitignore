@@ -1,4 +1,4 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
 # Compiled output
 /dist
@@ -41,8 +41,18 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Environment files
+# Environment files with secrets
+/src/environments/environment.ts
+
+# Environment variables
 .env
 .env.local
-/src/environments/environment.ts
-/src/environments/environment.prod.ts
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vercel
+.vercel
+
+# Netlify
+.netlify

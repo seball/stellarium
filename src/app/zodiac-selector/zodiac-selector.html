@@ -1,6 +1,8 @@
 <div class="zodiac-container">
 
   <h2 class="zodiac-title">Wybierz swój znak zodiaku</h2>
+  
+  <!-- Desktop grid -->
   <div class="zodiac-grid">
     <div 
       *ngFor="let sign of zodiacSigns" 
@@ -15,4 +17,23 @@
     >
     </div>
   </div>
+  
+  <!-- Mobile carousel -->
+  <div class="mobile-carousel-wrap">
+    <owl-carousel-o [options]="customOptions" class="zodiac-carousel">
+      <ng-template carouselSlide *ngFor="let sign of zodiacSigns" [id]="sign.name">
+        <div 
+          class="zodiac-slide"
+          [class.selected]="selectedSign === sign.name"
+          [style.background-color]="sign.backgroundColor"
+          [style.background-image]="'url(/zodiac.svg)'"
+          [style.background-position]="getSpritePosition(sign.spritePosition)"
+          [title]="sign.name + ' (' + sign.dateRange + ')'"
+          (click)="selectSign(sign.name)"
+        >
+        </div>
+      </ng-template>
+    </owl-carousel-o>
+  </div>
+  
 </div>

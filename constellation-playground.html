@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constellation Playground</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #0a0a0a;
+            color: white;
+        }
+        
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .canvas-container {
+            position: relative;
+        }
+        
+        canvas {
+            border: 1px solid #333;
+            background: radial-gradient(ellipse at center, #0a0e27 0%, #000000 100%);
+            cursor: crosshair;
+        }
+        
+        .controls {
+            width: 300px;
+            padding: 20px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            height: fit-content;
+        }
+        
+        button {
+            padding: 10px 15px;
+            margin: 5px 0;
+            background: #564592;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        button:hover {
+            background: #724cf9;
+        }
+        
+        button:disabled {
+            background: #333;
+            cursor: not-allowed;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin: 10px 0;
+            padding: 10px;
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            resize: vertical;
+        }
+        
+        .point-list {
+            max-height: 200px;
+            overflow-y: auto;
+            background: #333;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        
+        .point-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            border-bottom: 1px solid #555;
+        }
+        
+        .point-item:last-child {
+            border-bottom: none;
+        }
+        
+        .delete-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 2px 6px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 10px;
+        }
+        
+        .mode-toggle {
+            margin: 10px 0;
+        }
+        
+        .mode-toggle button {
+            width: 48%;
+            margin: 1%;
+        }
+        
+        .mode-toggle button.active {
+            background: #f896d8;
+        }
+        
+        .info {
+            font-size: 12px;
+            color: #aaa;
+            margin: 10px 0;
+        }
+        
+        .image-controls {
+            margin: 20px 0;
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 4px;
+        }
+        
+        .image-controls input[type="file"] {
+            display: none;
+        }
+        
+        .file-label {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #564592;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        
+        .file-label:hover {
+            background: #724cf9;
+        }
+        
+        .slider-container {
+            margin: 10px 0;
+        }
+        
+        .slider-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            margin: 5px 0;
+        }
+        
+        .slider-value {
+            display: inline-block;
+            margin-left: 5px;
+            color: #f896d8;
+        }
+        
+        .image-info {
+            font-size: 11px;
+            color: #888;
+            margin-top: 10px;
+        }
+        
+        .position-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        
+        .position-controls button {
+            padding: 8px;
+            font-size: 16px;
+        }
+        
+        .position-controls button:nth-child(1) { grid-column: 2; }
+        .position-controls button:nth-child(2) { grid-column: 1; }
+        .position-controls button:nth-child(3) { grid-column: 3; }
+        .position-controls button:nth-child(4) { grid-column: 2; }
+    </style>
+</head>
+<body>
+    <h1>Constellation Playground</h1>
+    <div class="container">
+        <div class="canvas-container">
+            <canvas id="canvas" width="600" height="600"></canvas>
+        </div>
+        
+        <div class="controls">
+            <h3>Controls</h3>
+            
+            <div class="mode-toggle">
+                <button id="pointMode" class="active">Add Points</button>
+                <button id="lineMode">Draw Lines</button>
+            </div>
+            
+            <div class="info">
+                <strong>Point Mode:</strong> Click to add points<br>
+                <strong>Line Mode:</strong> Click two points to connect them
+            </div>
+            
+            <button onclick="clearCanvas()">Clear All</button>
+            <button onclick="undoLast()">Undo Last</button>
+            <button onclick="generateOutput()">Generate Output</button>
+            
+            <div class="image-controls">
+                <h4>Background Image</h4>
+                <input type="file" id="imageUpload" accept="image/*" onchange="handleImageUpload(event)">
+                <label for="imageUpload" class="file-label">Upload Image</label>
+                
+                <div class="slider-container">
+                    <label>Scale: <span class="slider-value" id="scaleValue">1.0</span></label>
+                    <input type="range" id="scaleSlider" min="0.1" max="10" step="0.1" value="1" onchange="updateImageScale(this.value)">
+                </div>
+                
+                <div class="slider-container">
+                    <label>Horizontal Position: <span class="slider-value" id="xPosValue">0</span></label>
+                    <input type="range" id="xPosSlider" min="-2000" max="2000" step="1" value="0" onchange="updateImagePosition('x', this.value)">
+                </div>
+                
+                <div class="slider-container">
+                    <label>Vertical Position: <span class="slider-value" id="yPosValue">0</span></label>
+                    <input type="range" id="yPosSlider" min="-2000" max="2000" step="1" value="0" onchange="updateImagePosition('y', this.value)">
+                </div>
+                
+                <div class="slider-container">
+                    <label>Opacity: <span class="slider-value" id="opacityValue">0.5</span></label>
+                    <input type="range" id="opacitySlider" min="0" max="1" step="0.1" value="0.5" onchange="updateImageOpacity(this.value)">
+                </div>
+                
+                <div class="position-controls">
+                    <button onclick="moveImage(0, -10)">↑</button>
+                    <button onclick="moveImage(-10, 0)">←</button>
+                    <button onclick="moveImage(10, 0)">→</button>
+                    <button onclick="moveImage(0, 10)">↓</button>
+                </div>
+                
+                <button onclick="resetImagePosition()">Reset Position</button>
+                <button onclick="removeBackgroundImage()">Remove Image</button>
+                
+                <div class="image-info" id="imageInfo">No image loaded</div>
+            </div>
+            
+            <h4>Points (<span id="pointCount">0</span>)</h4>
+            <div class="point-list" id="pointList"></div>
+            
+            <h4>Generated Code</h4>
+            <textarea id="output" placeholder="Generated points and edges will appear here..."></textarea>
+            
+            <button onclick="copyToClipboard()">Copy to Clipboard</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const pointList = document.getElementById('pointList');
+        const pointCount = document.getElementById('pointCount');
+        const output = document.getElementById('output');
+        const pointModeBtn = document.getElementById('pointMode');
+        const lineModeBtn = document.getElementById('lineMode');
+        
+        let points = [];
+        let edges = [];
+        let mode = 'point'; // 'point' or 'line'
+        let selectedPoints = []; // For line mode
+        
+        // Background image variables
+        let backgroundImage = null;
+        let imageScale = 1.0;
+        let imageOpacity = 0.5;
+        let imageX = 0;
+        let imageY = 0;
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let lastImageX = 0;
+        let lastImageY = 0;
+        
+        // Canvas setup
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = 200;
+        
+        // Mode switching
+        pointModeBtn.addEventListener('click', () => setMode('point'));
+        lineModeBtn.addEventListener('click', () => setMode('line'));
+        
+        function setMode(newMode) {
+            mode = newMode;
+            selectedPoints = [];
+            pointModeBtn.classList.toggle('active', mode === 'point');
+            lineModeBtn.classList.toggle('active', mode === 'line');
+            redraw();
+        }
+        
+        // Mouse event handlers for dragging
+        canvas.addEventListener('mousedown', (e) => {
+            if (e.shiftKey && backgroundImage) {
+                isDragging = true;
+                const rect = canvas.getBoundingClientRect();
+                dragStartX = e.clientX - rect.left;
+                dragStartY = e.clientY - rect.top;
+                lastImageX = imageX;
+                lastImageY = imageY;
+                canvas.style.cursor = 'move';
+                e.preventDefault();
+            }
+        });
+        
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                const rect = canvas.getBoundingClientRect();
+                const currentX = e.clientX - rect.left;
+                const currentY = e.clientY - rect.top;
+                imageX = lastImageX + (currentX - dragStartX);
+                imageY = lastImageY + (currentY - dragStartY);
+                document.getElementById('xPosSlider').value = imageX;
+                document.getElementById('xPosValue').textContent = Math.round(imageX);
+                document.getElementById('yPosSlider').value = imageY;
+                document.getElementById('yPosValue').textContent = Math.round(imageY);
+                redraw();
+            }
+        });
+        
+        canvas.addEventListener('mouseup', () => {
+            isDragging = false;
+            canvas.style.cursor = 'crosshair';
+        });
+        
+        canvas.addEventListener('mouseleave', () => {
+            isDragging = false;
+            canvas.style.cursor = 'crosshair';
+        });
+        
+        // Canvas click handler
+        canvas.addEventListener('click', (e) => {
+            if (isDragging) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            if (mode === 'point') {
+                addPoint(x, y);
+            } else if (mode === 'line') {
+                const clickedPointIndex = findNearestPoint(x, y);
+                if (clickedPointIndex !== -1) {
+                    togglePointSelection(clickedPointIndex);
+                }
+            }
+        });
+        
+        function addPoint(x, y) {
+            // Convert canvas coordinates to normalized coordinates (-1 to 1)
+            const normalizedX = (x - centerX) / radius;
+            const normalizedY = (y - centerY) / radius;
+            
+            points.push({
+                x: normalizedX,
+                y: normalizedY,
+                canvasX: x,
+                canvasY: y
+            });
+            
+            updatePointList();
+            redraw();
+        }
+        
+        function findNearestPoint(x, y) {
+            let nearest = -1;
+            let minDistance = 20; // Maximum click distance
+            
+            points.forEach((point, index) => {
+                const distance = Math.sqrt(
+                    Math.pow(point.canvasX - x, 2) + 
+                    Math.pow(point.canvasY - y, 2)
+                );
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nearest = index;
+                }
+            });
+            
+            return nearest;
+        }
+        
+        function togglePointSelection(pointIndex) {
+            const index = selectedPoints.indexOf(pointIndex);
+            if (index === -1) {
+                selectedPoints.push(pointIndex);
+                if (selectedPoints.length === 2) {
+                    // Create edge between two selected points
+                    const [point1, point2] = selectedPoints;
+                    if (!edgeExists(point1, point2)) {
+                        edges.push([point1, point2]);
+                    }
+                    selectedPoints = [];
+                    redraw();
+                }
+            } else {
+                selectedPoints.splice(index, 1);
+            }
+            redraw();
+        }
+        
+        function edgeExists(point1, point2) {
+            return edges.some(([a, b]) => 
+                (a === point1 && b === point2) || (a === point2 && b === point1)
+            );
+        }
+        
+        function redraw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw background image if loaded
+            if (backgroundImage) {
+                ctx.save();
+                ctx.globalAlpha = imageOpacity;
+                const scaledWidth = backgroundImage.width * imageScale;
+                const scaledHeight = backgroundImage.height * imageScale;
+                const drawX = imageX + (canvas.width - scaledWidth) / 2;
+                const drawY = imageY + (canvas.height - scaledHeight) / 2;
+                ctx.drawImage(backgroundImage, drawX, drawY, scaledWidth, scaledHeight);
+                ctx.restore();
+            }
+            
+            // Draw center crosshair
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(centerX - 10, centerY);
+            ctx.lineTo(centerX + 10, centerY);
+            ctx.moveTo(centerX, centerY - 10);
+            ctx.lineTo(centerX, centerY + 10);
+            ctx.stroke();
+            
+            // Draw edges
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.shadowBlur = 5;
+            ctx.shadowColor = '#ffffff';
+            
+            edges.forEach(([startIndex, endIndex]) => {
+                const start = points[startIndex];
+                const end = points[endIndex];
+                if (start && end) {
+                    ctx.beginPath();
+                    ctx.moveTo(start.canvasX, start.canvasY);
+                    ctx.lineTo(end.canvasX, end.canvasY);
+                    ctx.stroke();
+                }
+            });
+            
+            // Draw points
+            points.forEach((point, index) => {
+                ctx.save();
+                
+                // Highlight selected points
+                if (selectedPoints.includes(index)) {
+                    ctx.fillStyle = '#ff4444';
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = '#ff4444';
+                } else {
+                    ctx.fillStyle = '#ffffff';
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = '#ffffff';
+                }
+                
+                ctx.beginPath();
+                ctx.arc(point.canvasX, point.canvasY, 5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Draw point index
+                ctx.fillStyle = '#000';
+                ctx.font = '10px Arial';
+                ctx.textAlign = 'center';
+                ctx.shadowBlur = 0;
+                ctx.fillText(index.toString(), point.canvasX, point.canvasY + 3);
+                
+                ctx.restore();
+            });
+        }
+        
+        function updatePointList() {
+            pointCount.textContent = points.length;
+            pointList.innerHTML = points.map((point, index) => `
+                <div class="point-item">
+                    <span>${index}: (${point.x.toFixed(2)}, ${point.y.toFixed(2)})</span>
+                    <button class="delete-btn" onclick="deletePoint(${index})">×</button>
+                </div>
+            `).join('');
+        }
+        
+        function deletePoint(index) {
+            points.splice(index, 1);
+            // Remove edges that reference this point and update indices
+            edges = edges.filter(([a, b]) => a !== index && b !== index)
+                        .map(([a, b]) => [
+                            a > index ? a - 1 : a,
+                            b > index ? b - 1 : b
+                        ]);
+            selectedPoints = [];
+            updatePointList();
+            redraw();
+        }
+        
+        function clearCanvas() {
+            points = [];
+            edges = [];
+            selectedPoints = [];
+            updatePointList();
+            redraw();
+        }
+        
+        function undoLast() {
+            if (mode === 'point' && points.length > 0) {
+                deletePoint(points.length - 1);
+            } else if (mode === 'line' && edges.length > 0) {
+                edges.pop();
+                redraw();
+            }
+        }
+        
+        function generateOutput() {
+            const pointsArray = points.map(p => 
+                `{ x: ${p.x.toFixed(3)}, y: ${p.y.toFixed(3)} }`
+            ).join(',\n          ');
+            
+            const edgesArray = edges.map(([a, b]) => `[${a}, ${b}]`).join(', ');
+            
+            const code = `{
+        points: [
+          ${pointsArray}
+        ],
+        edges: [${edgesArray}]
+      }`;
+            
+            output.value = code;
+        }
+        
+        function copyToClipboard() {
+            output.select();
+            document.execCommand('copy');
+            alert('Copied to clipboard!');
+        }
+        
+        // Image handling functions
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        backgroundImage = img;
+                        imageX = 0;
+                        imageY = 0;
+                        updateImageInfo(`${img.width}x${img.height} - ${file.name}`);
+                        redraw();
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function updateImageScale(value) {
+            imageScale = parseFloat(value);
+            document.getElementById('scaleValue').textContent = value;
+            redraw();
+        }
+        
+        function updateImageOpacity(value) {
+            imageOpacity = parseFloat(value);
+            document.getElementById('opacityValue').textContent = value;
+            redraw();
+        }
+        
+        function resetImagePosition() {
+            imageX = 0;
+            imageY = 0;
+            imageScale = 1.0;
+            imageOpacity = 0.5;
+            document.getElementById('scaleSlider').value = 1;
+            document.getElementById('scaleValue').textContent = '1.0';
+            document.getElementById('xPosSlider').value = 0;
+            document.getElementById('xPosValue').textContent = '0';
+            document.getElementById('yPosSlider').value = 0;
+            document.getElementById('yPosValue').textContent = '0';
+            document.getElementById('opacitySlider').value = 0.5;
+            document.getElementById('opacityValue').textContent = '0.5';
+            redraw();
+        }
+        
+        function removeBackgroundImage() {
+            backgroundImage = null;
+            updateImageInfo('No image loaded');
+            redraw();
+        }
+        
+        function updateImageInfo(text) {
+            document.getElementById('imageInfo').textContent = text;
+        }
+        
+        function moveImage(dx, dy) {
+            if (backgroundImage) {
+                imageX += dx;
+                imageY += dy;
+                document.getElementById('xPosSlider').value = imageX;
+                document.getElementById('xPosValue').textContent = Math.round(imageX);
+                document.getElementById('yPosSlider').value = imageY;
+                document.getElementById('yPosValue').textContent = Math.round(imageY);
+                redraw();
+            }
+        }
+        
+        function updateImagePosition(axis, value) {
+            if (backgroundImage) {
+                const numValue = parseInt(value);
+                if (axis === 'x') {
+                    imageX = numValue;
+                    document.getElementById('xPosValue').textContent = value;
+                } else if (axis === 'y') {
+                    imageY = numValue;
+                    document.getElementById('yPosValue').textContent = value;
+                }
+                redraw();
+            }
+        }
+        
+        // Update info to include shift-drag instruction
+        document.querySelector('.info').innerHTML += '<br><strong>Image Pan:</strong> Hold Shift and drag to move image';
+        
+        // Initial draw
+        redraw();
+    </script>
+</body>
+</html>
