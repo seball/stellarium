@@ -6,7 +6,9 @@
       "Bash(npm run build:*)",
       "WebFetch(domain:www.npmjs.com)",
       "Bash(npm start)",
-      "WebFetch(domain:particles.js.org)"
+      "WebFetch(domain:particles.js.org)",
+      "Bash(find:*)",
+      "Bash(grep:*)"
     ],
     "deny": []
   }
