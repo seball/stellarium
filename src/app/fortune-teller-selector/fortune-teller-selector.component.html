@@ -1,19 +1,47 @@
 <div class="fortune-teller-selector">
-  <h3 class="selector-title">Wybierz swojego wróżbitę</h3>
-  <p class="selector-subtitle">Każdy ma swój unikalny styl przepowiadania przyszłości</p>
-  
+  <div class="header-content">
+    <div class="header-text">
+      <h3 class="selector-title">
+        <!-- <button class="back-icon-btn" (click)="goBackToZodiac()">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19 12H5M12 19L5 12L12 5"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button> -->
+        Wybierz swojego wróżbitę
+      </h3>
+      <p class="selector-subtitle">
+        Każdy ma swój unikalny styl przepowiadania przyszłości
+      </p>
+    </div>
+  </div>
+
   <div class="fortune-tellers-grid">
-    <div 
-      *ngFor="let fortuneTeller of fortuneTellers" 
+    <div
+      *ngFor="let fortuneTeller of fortuneTellers; let i = index"
       class="fortune-teller-card"
       [class.selected]="selectedFortuneTeller?.id === fortuneTeller.id"
-      (click)="selectFortuneTeller(fortuneTeller)"
+      [class.flipped]="flippedCards.includes(i)"
+      (click)="onCardClick(fortuneTeller, i, $event)"
     >
       <div class="card-inner">
         <div class="card-front">
-          <img [src]="'/fortune-tellers/' + fortuneTeller.id + '.webp'" 
-               [alt]="fortuneTeller.name"
-               class="fortune-teller-image">
+          <img
+            [src]="'/fortune-tellers/' + fortuneTeller.id + '.webp'"
+            [alt]="fortuneTeller.name"
+            class="fortune-teller-image"
+          />
           <div class="card-title">
             <h4 class="name" [style.color]="fortuneTeller.color">
               {{ fortuneTeller.name }}
@@ -21,21 +49,29 @@
             <p class="specialty">{{ fortuneTeller.specialty }}</p>
           </div>
         </div>
-        
+
         <div class="card-back">
           <h4 class="name">{{ fortuneTeller.name }}</h4>
           <p class="description">{{ fortuneTeller.description }}</p>
           <p class="personality">{{ fortuneTeller.personality }}</p>
         </div>
       </div>
-      
-      <div class="selection-indicator" [style.background-color]="fortuneTeller.color">
+
+      <div
+        class="selection-indicator"
+        [style.background-color]="fortuneTeller.color"
+      >
         <span *ngIf="selectedFortuneTeller?.id === fortuneTeller.id">✓</span>
       </div>
     </div>
   </div>
-  
+
   <div *ngIf="selectedFortuneTeller" class="selected-info">
-    <p>Wybrałeś: <strong [style.color]="selectedFortuneTeller.color">{{ selectedFortuneTeller.name }}</strong></p>
+    <p>
+      Wybrałeś:
+      <strong [style.color]="selectedFortuneTeller.color">{{
+        selectedFortuneTeller.name
+      }}</strong>
+    </p>
   </div>
 </div>

@@ -42,7 +42,7 @@ testem.log
 Thumbs.db
 
 # Environment files with secrets (keep environment.ts for build compatibility)
-# /src/environments/environment.ts
+/src/environments/environment.ts
 
 # Environment variables
 .env

@@ -166,6 +166,23 @@ export class HoroscopeComponent implements OnInit {
     }
   }
 
+  onBackToZodiac(): void {
+    // Clear current selections and return to zodiac selector
+    this.selectedSign = '';
+    this.selectedFortuneTeller = null;
+    this.horoscopeText = '';
+    this.horoscopeHtml = '';
+    this.hasSelectedSignBefore = false;
+    this.hasSelectedFortuneTellerBefore = false;
+    this.showFortuneTellerSelector = false;
+    this.hasReachedLimit = false;
+    
+    // Clear localStorage
+    localStorage.removeItem('user_zodiac_sign');
+    localStorage.removeItem('user_fortune_teller');
+    localStorage.removeItem('horoscope_data');
+  }
+
   resetSelection(): void {
     if (!this.hasReachedLimit && !this.hasSelectedSignBefore) {
       this.selectedSign = null;

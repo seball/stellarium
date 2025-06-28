@@ -17,35 +17,12 @@
     <div *ngIf="showFortuneTellerSelector">
       <app-fortune-teller-selector
         (fortuneTellerSelected)="onFortuneTellerSelected($event)"
+        (backToZodiac)="onBackToZodiac()"
         [selectedFortuneTeller]="selectedFortuneTeller"
       >
       </app-fortune-teller-selector>
     </div>
 
-    <!-- Generowanie horoskopu dla użytkowników którzy już wybrali -->
-    <div
-      *ngIf="hasSelectedSignBefore && hasSelectedFortuneTellerBefore && !horoscopeText && !hasReachedLimit && !showFortuneTellerSelector"
-    >
-      <div class="daily-horoscope-section">
-        <h3>Twój znak: {{ selectedSign }}</h3>
-        <div *ngIf="selectedFortuneTeller" class="selected-fortune-teller">
-          <p>
-            Wróżbita:
-            <span [style.color]="selectedFortuneTeller.color"
-              >{{ selectedFortuneTeller.avatar }} {{ selectedFortuneTeller.name
-              }}</span
-            >
-          </p>
-        </div>
-        <button
-          class="generate-button"
-          (click)="generateHoroscope()"
-          [disabled]="isLoading"
-        >
-          Wygeneruj horoskop na dziś
-        </button>
-      </div>
-    </div>
 
     <div
       *ngIf="selectedSign && (horoscopeText || isLoading)"
@@ -54,10 +31,7 @@
       <div class="selected-sign-header">
         <h2>{{ selectedSign }}</h2>
         <div *ngIf="selectedFortuneTeller" class="fortune-teller-info">
-          <span
-            class="fortune-teller-badge"
-            [style.background-color]="selectedFortuneTeller.color"
-          >
+          <span class="fortune-teller-badge horoscope-display-badge">
             {{ selectedFortuneTeller.avatar }} {{ selectedFortuneTeller.name }}
           </span>
         </div>

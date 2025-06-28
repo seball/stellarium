@@ -46,8 +46,9 @@ export class OpenAIService {
 
       const prompt = `Napisz horoskop dla znaku ${sign} w wulgarnym stylu, na dzisiaj, ${date}. 
       Napisz o miłości, karierze i zdrowiu, ale bez szczęśliwych liczb. 
+      Użyj markdown z nagłówkami trzeciego poziomu (###) dla każdej sekcji: ### Miłość, ### Kariera, ### Zdrowie.
       Możesz napisać dłuższy tekst - nie krępuj się! Po polsku. 
-      Tekst jest spersonalizowany więc unikaj zdań w liczbie mnogiej.'}`;
+      Tekst jest spersonalizowany więc unikaj zdań w liczbie mnogiej.`;
 
       const response = await this.client.chat.completions.create({
         messages: [
