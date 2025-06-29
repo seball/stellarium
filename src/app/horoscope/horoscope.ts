@@ -193,7 +193,15 @@ export class HoroscopeComponent implements OnInit {
 
   private async parseMarkdownToHtml(text: string): Promise<void> {
     try {
-      const htmlContent = await marked(text);
+      // Pre-process text to escape asterisks in censored words
+      // Pattern: letter + 1-4 asterisks + letter
+      const processedText = text.replace(/(\w)\*{1,4}(\w)/g, (match, p1, p2) => {
+        const asterisks = match.substring(1, match.length - 1);
+        const escapedAsterisks = asterisks.replace(/\*/g, '\\*');
+        return p1 + escapedAsterisks + p2;
+      });
+      
+      const htmlContent = await marked(processedText);
       this.horoscopeHtml = this.sanitizer.bypassSecurityTrustHtml(htmlContent);
     } catch (error) {
       console.error('Błąd podczas parsowania markdown:', error);
