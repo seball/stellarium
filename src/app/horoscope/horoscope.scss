@@ -523,13 +523,18 @@
 // Responsive design
 @media (max-width: 768px) {
   .main-logo {
-    height: 180px;
+    height: 160px;
+  }
+  
+  .horoscope-content {
+    padding: 1rem;
   }
   
   .horoscope-card {
-    padding: 2rem 1.5rem;
-    margin: 3rem 1rem 0;
+    padding: 1.5rem;
+    margin: 2rem 0.5rem 0;
     backdrop-filter: blur(20px);
+    border-radius: 20px;
     
     &::after {
       display: none; // Simplify on mobile
@@ -537,18 +542,92 @@
   }
   
   .selected-sign-header h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
   
-  .horoscope-text {
-    h1 { font-size: 1.5rem; }
-    h2 { font-size: 1.3rem; }
-    h3 { font-size: 1.1rem; }
-    
-    p {
-      font-size: 1.05rem;
-      text-align: left;
-      text-indent: 0;
+  :host ::ng-deep {
+    .horoscope-text {
+      h3 {
+        font-size: 1.2rem !important;
+        margin: 1.5rem 0 0.8rem 0 !important;
+        padding: 0.4rem !important;
+      }
+      
+      p {
+        font-size: 1rem;
+        line-height: 1.7;
+        text-align: left;
+        margin: 1rem 0;
+        hyphens: none;
+        
+        &:first-of-type {
+          font-size: 1.1rem;
+          margin-bottom: 1.2rem;
+        }
+      }
+      
+      ul, ol {
+        padding-left: 1.5rem;
+        
+        li {
+          margin: 0.6rem 0;
+          font-size: 0.95rem;
+          line-height: 1.6;
+        }
+      }
+    }
+  }
+  
+  .generate-button {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+  }
+  
+  .back-button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+  }
+  
+  .fortune-teller-badge {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .horoscope-display-badge {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+  }
+}
+
+// Extra small devices
+@media (max-width: 480px) {
+  .main-logo {
+    height: 140px;
+  }
+  
+  .horoscope-card {
+    padding: 1.2rem;
+    margin: 1.5rem 0.3rem 0;
+  }
+  
+  .selected-sign-header h2 {
+    font-size: 1.8rem;
+  }
+  
+  :host ::ng-deep {
+    .horoscope-text {
+      h3 {
+        font-size: 1.1rem !important;
+      }
+      
+      p {
+        font-size: 0.95rem;
+        line-height: 1.65;
+        
+        &:first-of-type {
+          font-size: 1rem;
+        }
+      }
     }
   }
 }

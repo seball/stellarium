@@ -63,8 +63,12 @@ export class OpenAIService {
     const prompt = `Napisz BARDZO DŁUGI i SZCZEGÓŁOWY horoskop dla znaku ${sign}, na dzisiaj, ${date}. 
     Każda sekcja powinna mieć minimum 3-4 akapity tekstu. Rozwiń każdy temat dogłębnie.
     Napisz o miłości, karierze i zdrowiu, ale bez szczęśliwych liczb. 
-    Użyj markdown z nagłówkami trzeciego poziomu (###) dla każdej sekcji: ### Miłość, ### Kariera, ### Zdrowie.
+    Użyj markdown z nagłówkami trzeciego poziomu (###) dla każdej sekcji. KONIECZNIE dodaj emotikony do tytułów:
+    ### 💕 Miłość
+    ### 💼 Kariera  
+    ### 🌟 Zdrowie
     Napisz naprawdę dużo - minimum 500 słów całościowo! Bądź szczegółowy, opisowy i konkretny. Po polsku. 
+    WAŻNE: Pisz krótkimi, zwięzłymi akapitami (max 3-4 zdania na akapit) dla lepszej czytelności na urządzeniach mobilnych.
     Tekst jest spersonalizowany więc unikaj zdań w liczbie mnogiej.`;
 
     // Prepare messages based on environment flag
