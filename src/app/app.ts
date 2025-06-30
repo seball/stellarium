@@ -4,15 +4,19 @@ import { HoroscopeComponent } from './horoscope/horoscope';
 import { NgParticlesService, NgxParticlesModule } from '@tsparticles/angular';
 import { Engine, ParticlesOptions } from '@tsparticles/engine';
 import { loadSlim } from '@tsparticles/slim';
+import { Survey } from './survey/survey';
+import { SurveyService } from './services/survey';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HoroscopeComponent, NgxParticlesModule],
+  imports: [RouterOutlet, HoroscopeComponent, NgxParticlesModule, Survey, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App implements OnInit {
   protected title = 'Stellarium';
+  showSurvey = false;
 
   id = 'tsparticles';
 
@@ -97,12 +101,24 @@ export class App implements OnInit {
     detectRetina: true,
   };
 
-  constructor(private readonly ngParticlesService: NgParticlesService) {}
+  constructor(
+    private readonly ngParticlesService: NgParticlesService,
+    private surveyService: SurveyService
+  ) {}
 
   async ngOnInit(): Promise<void> {
     await this.ngParticlesService.init(async (engine: Engine) => {
       await loadSlim(engine);
     });
+
+    // Check if survey should be shown
+    if (!this.surveyService.isSurveyCompleted()) {
+      this.showSurvey = true;
+    }
+  }
+
+  onSurveyCompleted(): void {
+    this.showSurvey = false;
   }
 
   particlesLoaded(container: any): void {

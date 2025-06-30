@@ -1,0 +1,48 @@
+<div class="survey-container">
+  <div class="survey-card">
+    <div class="survey-header">
+      <h2>Poznajmy się lepiej</h2>
+      <p class="survey-subtitle">Odpowiedz na kilka pytań, aby otrzymać spersonalizowany horoskop</p>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-dots">
+        <button 
+          *ngFor="let question of questions; let i = index"
+          class="progress-dot"
+          [class.active]="i === currentQuestionIndex"
+          [class.completed]="answers[question.id] !== undefined"
+          [disabled]="answers[question.id] === undefined && i > currentQuestionIndex"
+          (click)="goToQuestion(i)"
+          [title]="'Pytanie ' + (i + 1)">
+        </button>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progress"></div>
+      </div>
+    </div>
+
+    <div class="question-container">
+      <p class="question-number">Pytanie {{ currentQuestionIndex + 1 }} z {{ questions.length }}</p>
+      <h3 class="question-text">{{ currentQuestion.question }}</h3>
+      
+      <div class="scale-container">
+        <div class="scale-labels-mobile">
+          <span class="scale-label-left">Zgadzam się</span>
+          <span class="scale-label-right">Nie zgadzam się</span>
+        </div>
+        <div class="scale-buttons">
+          <button 
+            *ngFor="let option of scaleOptions" 
+            class="scale-button"
+            [class.selected]="answers[currentQuestion.id] === option.value"
+            (click)="selectAnswer(option.value)"
+            [attr.data-value]="option.value"
+            [title]="option.label">
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

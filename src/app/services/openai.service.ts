@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import OpenAI from 'openai';
 import { environment } from '../../environments/environment';
 import { FortuneTeller } from '../models/fortune-teller.model';
+import { SurveyService } from './survey';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class OpenAIService {
   private client: OpenAI | null = null;
   private deepseekClient: OpenAI | null = null;
 
-  constructor() {
+  constructor(private surveyService: SurveyService) {
     this.initializeClient();
     this.initializeDeepseekClient();
   }
@@ -60,6 +61,12 @@ export class OpenAIService {
       fortuneTeller?.systemPrompt ||
       'Jesteś sarkastycznym astrologiem który pisze horoskopy z przymrużeniem oka. Używasz nieformalnego języka polskiego, ironii i subtelnego humoru. Twoje horoskopy są zabawne ale nie złośliwe, z dozą cynizmu ale bez krzywdzenia czytelnika.';
 
+    // Get personality profile from survey
+    const personalityProfile = this.surveyService.getPersonalityProfile();
+    const personalityContext = personalityProfile 
+      ? `\n\nInformacje o użytkowniku: ${personalityProfile} Uwzględnij te cechy w horoskopie, dostosuj rady i przewidywania do profilu osobowości użytkownika.`
+      : '';
+
     const prompt = `Napisz BARDZO DŁUGI i SZCZEGÓŁOWY horoskop dla znaku ${sign}, na dzisiaj, ${date}. 
     Każda sekcja powinna mieć minimum 3-4 akapity tekstu. Rozwiń każdy temat dogłębnie.
     Napisz o miłości, karierze i zdrowiu, ale bez szczęśliwych liczb. 
@@ -69,7 +76,7 @@ export class OpenAIService {
     ### 🌟 Zdrowie
     Napisz naprawdę dużo - minimum 500 słów całościowo! Bądź szczegółowy, opisowy i konkretny. Po polsku. 
     WAŻNE: Pisz krótkimi, zwięzłymi akapitami (max 3-4 zdania na akapit) dla lepszej czytelności na urządzeniach mobilnych.
-    Tekst jest spersonalizowany więc unikaj zdań w liczbie mnogiej.`;
+    Tekst jest spersonalizowany więc unikaj zdań w liczbie mnogiej.${personalityContext}`;
 
     // Prepare messages based on environment flag
     const messages = environment.combineSystemAndUserPrompts

@@ -11,4 +11,7 @@
     <app-horoscope></app-horoscope>
     <router-outlet />
   </div>
+
+  <!-- Survey modal -->
+  <app-survey *ngIf="showSurvey" (surveyCompleted)="onSurveyCompleted()"></app-survey>
 </div>
