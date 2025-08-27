@@ -67,7 +67,28 @@ export class OpenAIService {
       ? `\n\nInformacje o użytkowniku: ${personalityProfile} Uwzględnij te cechy w horoskopie, dostosuj rady i przewidywania do profilu osobowości użytkownika.`
       : '';
 
+    // Spersonalizowany kontekst dla użytkowniczki
+    const userProfile = `
+    Profil użytkowniczki:
+    - Młoda, atrakcyjna blondynka
+    - Singielka przeżywająca trudności po toksycznej relacji z byłym partnerem
+    - Bardzo dbająca o swoją figurę, regularnie chodzi na siłownię
+    - Trzyma się swojej diety, ale zmaga się z zaburzeniami odżywiania co wpływa na jej nastrój
+    - Pracuje w niemieckojęzycznej korporacji Balluff
+    - Interesuje się psychologią, duchowością i dietetyką
+    - Bywa wybuchowa emocjonalnie
+    `;
+
     const prompt = `Napisz BARDZO DŁUGI i SZCZEGÓŁOWY horoskop dla znaku ${sign}, na dzisiaj, ${date}. 
+    
+    ${userProfile}
+    
+    Uwzględnij powyższy profil w horoskopie. Dostosuj rady do jej sytuacji życiowej:
+    - W sekcji miłości skup się na procesie gojenia po toksycznej relacji, budowaniu zdrowych granic, samoakceptacji
+    - W karierze uwzględnij pracę w międzynarodowym środowisku korporacyjnym
+    - W zdrowiu delikatnie porusz temat balansu między dbaniem o formę a zdrowym podejściem do odżywiania
+    - Dodaj elementy związane z jej zainteresowaniami (psychologia, duchowość)
+    
     Każda sekcja powinna mieć minimum 3-4 akapity tekstu. Rozwiń każdy temat dogłębnie.
     Napisz o miłości, karierze i zdrowiu, ale bez szczęśliwych liczb. 
     Użyj markdown z nagłówkami trzeciego poziomu (###) dla każdej sekcji. KONIECZNIE dodaj emotikony do tytułów:
